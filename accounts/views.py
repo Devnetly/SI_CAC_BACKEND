@@ -1,0 +1,27 @@
+from rest_framework.generics import RetrieveAPIView,GenericAPIView
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
+from rest_framework import status
+from .models import User
+from .serializers import UserProfileSerializer
+
+
+
+
+class UserProfileDetailView(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        user_id = self.request.user.id
+        user_profile = User.objects.get(pk=user_id)
+        return user_profile
+
+
+
+
+
+
+
+
