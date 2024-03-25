@@ -122,6 +122,13 @@ class Patient(models.Model):
         RADIATION = 'Radiations Ionisantes', _('Radiation Ionisante')
         PRODUIT = 'Produits Chimiques', _('Produits Chimiques')
         AUTRE = 'Autre', _('Autre')
+    class ProgressChoices(models.IntegerChoices):
+        ENREGISTRE = 0, _('Enregistré')
+        ETAT_CIVIL = 25, _('Etat civil')
+        HISTOLOGIE = 50, _('Etude histopathologique')
+        IMMUNOMARQUAGE = 75, _('Immunomarquage')
+        TERMINER = 100, _('Terminé')
+
     phone_number_validator = RegexValidator(
         regex=r'^0\d{9}$',
         message=_("Le numéro de téléphone  doit commencer par '0',  et ne contient que 10 chiffres."),
@@ -159,7 +166,7 @@ class Patient(models.Model):
     phone_number = models.CharField(_("Numéro de téléphone "), max_length=10, blank=True,null=True,validators=[phone_number_validator],)
     doctors = models.ForeignKey(User,verbose_name="Médecins", on_delete=models.CASCADE)
     histologies = models.ForeignKey(Histology,verbose_name="Histologies", on_delete=models.CASCADE)
-
+    progress = models.IntegerField(_("Status"), choices=ProgressChoices.choices, default=0)
        
 
     def age(self):
