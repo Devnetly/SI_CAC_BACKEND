@@ -31,7 +31,7 @@
 
 ## Run the Django Server
 
-1. Follow `.env.template` to setup your database settings in the `.env`.
+1. Follow `.env.template` to setup your database settings in the `.env`
 
 
 2. Apply database migrations:
