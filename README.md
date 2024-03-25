@@ -31,19 +31,22 @@
 
 ## Run the Django Server
 
-1. Apply database migrations:
+1. Follow `.env.template` to setup your database settings in the `.env`.
+
+
+2. Apply database migrations:
 
     ```bash
     python manage.py migrate
     ```
 
-2. Start the Django development server:
+3. Start the Django development server:
 
     ```bash
     python manage.py runserver
     ```
 
-3. Open your web browser and visit [http://localhost:8000](http://localhost:8000) to access the application.
+4. Open your web browser and visit [http://localhost:8000](http://localhost:8000) to access the application.
 
 ## Additional Notes
 
