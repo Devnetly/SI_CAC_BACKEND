@@ -14,4 +14,16 @@ class HistologySerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = '__all__'
+        exclude = ['doctors']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        else:
+            raise serializers.ValidationError(_('User not found in the request'))
+
+        validated_data.pop('doctors', None)  # Remove the 'doctors' field from validated_data
+
+        patient = Patient.objects.create(doctors=user, **validated_data)
+        return patient
