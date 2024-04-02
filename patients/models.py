@@ -4,7 +4,13 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.forms.models import model_to_dict
 import datetime
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 
@@ -164,7 +170,7 @@ class Patient(models.Model):
         )
     other_exposition = models.CharField(_(""), max_length=150, blank=True,null=True)
     phone_number = models.CharField(_("Numéro de téléphone "), max_length=10, blank=True,null=True,validators=[phone_number_validator],)
-    doctors = models.ForeignKey(User,verbose_name="Médecins", on_delete=models.CASCADE)
+    primary_doctor = models.ForeignKey(User, verbose_name="Médecin principal", on_delete=models.CASCADE, related_name="primary_patients", null=True, blank=True)
     histologies = models.ForeignKey(Histology,verbose_name="Histologies", on_delete=models.CASCADE)
     progress = models.IntegerField(_("Status"), choices=ProgressChoices.choices, default=0)
        
@@ -174,8 +180,23 @@ class Patient(models.Model):
     
     def full_name(self):
         return  self.first_name.capitalize() +' '+self.last_name.upper()
+    
 
 
-   
+class PatientCollaborator(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="collaborators")
+    collaborator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="collaborating_patients")
+
+    class Meta:
+        unique_together = ('patient', 'collaborator')
 
 
+#keep track of patient modifications
+class PatientHistory(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='history')
+    modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='modified_patients')
+    modified_at = models.DateTimeField(default=timezone.now)
+    data = models.TextField()
+
+    class Meta:
+        ordering = ['-modified_at']

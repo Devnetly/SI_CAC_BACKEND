@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Immunohistochemistry, Histology, Patient
+from .models import Immunohistochemistry, Histology, Patient, PatientCollaborator, PatientHistory
 
 class ImmunochemistrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,10 +11,20 @@ class HistologySerializer(serializers.ModelSerializer):
         model = Histology
         fields = '__all__'
 
+class PatientCollaboratorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientCollaborator
+        fields = ['collaborator']
+
+class PatientHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientHistory
+        fields = '__all__'
+
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        exclude = ['doctors']
+        exclude = ['primary_doctor']
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -23,7 +33,7 @@ class PatientSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError(_('User not found in the request'))
 
-        validated_data.pop('doctors', None)  # Remove the 'doctors' field from validated_data
+        validated_data.pop('primary_doctor', None)  # Remove the 'primary_doctor' field from validated_data
 
-        patient = Patient.objects.create(doctors=user, **validated_data)
+        patient = Patient.objects.create(primary_doctor=user, **validated_data)
         return patient
