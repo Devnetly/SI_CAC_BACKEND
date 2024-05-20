@@ -5,10 +5,10 @@ from rest_framework import status
 from .models import User
 from .serializers import UserProfileSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import MyTokenObtainPairSerializer
+from .serializers import TokenObtainPairSerializer
 
-class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+class TokenObtainPairView(TokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
 
 
 
