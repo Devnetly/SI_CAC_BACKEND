@@ -17,6 +17,6 @@ urlpatterns = [
         'put': 'update',
         'delete': 'destroy'
     }), name='patient-collaborators'),
-    path('predictions/', PredictionViewSet.as_view({'get': 'list'})),
+    path('predictions/', PredictionViewSet.as_view({'get': 'list_preds'})),
     path('predictions/<int:patient_id>/', PredictionViewSet.as_view({'post': 'create', 'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 ]

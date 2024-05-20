@@ -94,9 +94,11 @@ class PatientsByDoctorView(generics.ListAPIView):
 class PredictionViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
 
-    def list(self, request):
+
+    def list_preds(self, request):
         predictions = Prediction.objects.all()
         serializer = PredictionSerializer(predictions, many=True)
+        print("predictions",predictions)
         return Response(serializer.data)
 
     def create(self, request, patient_id):
@@ -108,16 +110,15 @@ class PredictionViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, patient_id):
-        try:
-            prediction = Prediction.objects.get(patient_id=patient_id)
-        except Prediction.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = PredictionSerializer(prediction)
+        patient = Patient.objects.get(id=patient_id)
+        predictions = patient.predictions.all()
+        serializer = PredictionSerializer(predictions, many=True)
         return Response(serializer.data)
 
-    def update(self, request, patient_id):
+    def update(self, request, patient_id, prediction_id):
+        patient = Patient.objects.get(id=patient_id)
         try:
-            prediction = Prediction.objects.get(patient_id=patient_id)
+            prediction = Prediction.objects.get(id=prediction_id, patient=patient)
         except Prediction.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = PredictionSerializer(prediction, data=request.data)

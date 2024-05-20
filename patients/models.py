@@ -190,7 +190,7 @@ class Prediction(models.Model):
     malignant = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     atypical = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     #link to the patient
-    patient = models.OneToOneField(Patient, on_delete=models.CASCADE, related_name='prediction')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='predictions')
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
