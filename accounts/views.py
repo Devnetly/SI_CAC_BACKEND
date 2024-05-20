@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from .models import User
 from .serializers import UserProfileSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import MyTokenObtainPairSerializer
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
 
 
 
