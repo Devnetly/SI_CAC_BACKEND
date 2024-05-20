@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import ImmunochemistryViewSet, HistologyViewSet, PatientViewSet, PatientsByDoctorView, PatientCollaboratorViewSet, PatientHistoryView
+from .views import ImmunochemistryViewSet, HistologyViewSet, PatientViewSet, PatientsByDoctorView, PatientCollaboratorViewSet, PatientHistoryView, PredictionViewSet
 
 router = routers.DefaultRouter()
 router.register(r'immunochemistries', ImmunochemistryViewSet)
@@ -17,4 +17,6 @@ urlpatterns = [
         'put': 'update',
         'delete': 'destroy'
     }), name='patient-collaborators'),
+    path('predictions/', PredictionViewSet.as_view({'get': 'list'})),
+    path('predictions/<int:patient_id>/', PredictionViewSet.as_view({'post': 'create', 'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
 ]

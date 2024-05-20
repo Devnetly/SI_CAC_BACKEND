@@ -2,8 +2,8 @@ from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
-from .models import Immunohistochemistry, Histology, Patient, PatientCollaborator, PatientHistory
-from .serializers import ImmunochemistrySerializer, HistologySerializer, PatientSerializer, PatientCollaboratorSerializer, PatientHistorySerializer
+from .models import Immunohistochemistry, Histology, Patient, PatientCollaborator, PatientHistory, Prediction
+from .serializers import ImmunochemistrySerializer, HistologySerializer, PatientSerializer, PatientCollaboratorSerializer, PatientHistorySerializer, PredictionSerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -89,3 +89,47 @@ class PatientsByDoctorView(generics.ListAPIView):
             raise PermissionDenied("You are not authorized to access patients for this doctor.")
 
         return Patient.objects.filter(primary_doctor=doctor)
+    
+
+class PredictionViewSet(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        predictions = Prediction.objects.all()
+        serializer = PredictionSerializer(predictions, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, patient_id):
+        patient = Patient.objects.get(id=patient_id)
+        serializer = PredictionSerializer(data=request.data)
+        if serializer.is_valid():
+            prediction = serializer.save(patient=patient)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, patient_id):
+        try:
+            prediction = Prediction.objects.get(patient_id=patient_id)
+        except Prediction.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = PredictionSerializer(prediction)
+        return Response(serializer.data)
+
+    def update(self, request, patient_id):
+        try:
+            prediction = Prediction.objects.get(patient_id=patient_id)
+        except Prediction.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = PredictionSerializer(prediction, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, patient_id):
+        try:
+            prediction = Prediction.objects.get(patient_id=patient_id)
+        except Prediction.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        prediction.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

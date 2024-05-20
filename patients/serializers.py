@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Immunohistochemistry, Histology, Patient, PatientCollaborator, PatientHistory
+from .models import Immunohistochemistry, Histology, Patient, PatientCollaborator, PatientHistory, Prediction
 
 class ImmunochemistrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,3 +37,8 @@ class PatientSerializer(serializers.ModelSerializer):
 
         patient = Patient.objects.create(primary_doctor=user, **validated_data)
         return patient
+    
+class PredictionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Prediction
+        fields = '__all__'
