@@ -173,6 +173,8 @@ class Patient(models.Model):
     primary_doctor = models.ForeignKey(User, verbose_name="Médecin principal", on_delete=models.CASCADE, related_name="primary_patients", null=True, blank=True)
     histologies = models.ForeignKey(Histology,verbose_name="Histologies", on_delete=models.CASCADE)
     progress = models.IntegerField(_("Status"), choices=ProgressChoices.choices, default=0)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
        
 
     def age(self):
@@ -181,7 +183,22 @@ class Patient(models.Model):
     def full_name(self):
         return  self.first_name.capitalize() +' '+self.last_name.upper()
     
+    
+class Prediction(models.Model):
+    #bening, malignant, atypical probabilities
+    benign = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
+    malignant = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
+    atypical = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
+    #link to the patient
+    patient = models.OneToOneField(Patient, on_delete=models.CASCADE, related_name='prediction')
+    created_at = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return f'Prediction for {self.patient.full_name()} at {self.created_at}'
+    
+    class Meta:
+        verbose_name = "Prediction"
+        verbose_name_plural = "Predictions"
 
 class PatientCollaborator(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="collaborators")

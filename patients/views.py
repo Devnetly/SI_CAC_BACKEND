@@ -88,4 +88,4 @@ class PatientsByDoctorView(generics.ListAPIView):
         if doctor != self.request.user:
             raise PermissionDenied("You are not authorized to access patients for this doctor.")
 
-        return Patient.objects.filter(doctors=doctor)
+        return Patient.objects.filter(primary_doctor=doctor)
