@@ -171,8 +171,9 @@ class Patient(models.Model):
     other_exposition = models.CharField(_(""), max_length=150, blank=True,null=True)
     phone_number = models.CharField(_("Numéro de téléphone "), max_length=10, blank=True,null=True,validators=[phone_number_validator],)
     primary_doctor = models.ForeignKey(User, verbose_name="Médecin principal", on_delete=models.CASCADE, related_name="primary_patients", null=True, blank=True)
-    histologies = models.ForeignKey(Histology,verbose_name="Histologies", on_delete=models.CASCADE)
+    histologies = models.ForeignKey(Histology,verbose_name="Histologies", on_delete=models.CASCADE, blank=True,null= True)
     progress = models.IntegerField(_("Status"), choices=ProgressChoices.choices, default=0)
+    archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
        

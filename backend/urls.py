@@ -24,7 +24,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/',include('accounts.urls')),
-    path('patients/',include('patients.urls')),
+    path('cac/',include('patients.urls')),
 
     path('password-reset/', PasswordResetView.as_view(), name='rest_password_reset'),
     path('password-change/',PasswordChangeView.as_view()),

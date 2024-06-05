@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Immunohistochemistry, Histology, Patient, PatientCollaborator, PatientHistory, Prediction
+from django.utils import timezone
+from datetime import timedelta
 
 class ImmunochemistrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,6 +39,37 @@ class PatientSerializer(serializers.ModelSerializer):
 
         patient = Patient.objects.create(primary_doctor=user, **validated_data)
         return patient
+    
+    
+class PatientCountSerializer(serializers.Serializer):
+    all_time = serializers.IntegerField()
+    this_year = serializers.IntegerField()
+    this_month = serializers.IntegerField()
+    this_week = serializers.IntegerField()
+
+
+class DoctorCountSerializer(serializers.Serializer):
+    all_time = serializers.IntegerField()
+    this_year = serializers.IntegerField()
+    this_month = serializers.IntegerField()
+    this_week = serializers.IntegerField()
+    
+
+class CancerPatientCountSerializer(serializers.Serializer):
+    all_time = serializers.IntegerField()
+    this_year = serializers.IntegerField()
+    this_month = serializers.IntegerField()
+    this_week = serializers.IntegerField()
+
+class MonthlyGenderPatientCountSerializer(serializers.Serializer):
+    month = serializers.CharField()
+    male_count = serializers.IntegerField()
+    female_count = serializers.IntegerField()
+
+
+class PredictionSerializer(serializers.ModelSerializer):
+    class Meta:
+        count = serializers.IntegerField()
     
 class PredictionSerializer(serializers.ModelSerializer):
     class Meta:
