@@ -154,6 +154,10 @@ class Patient(models.Model):
         _("Taille"),
         max_digits=5,
         decimal_places=2,validators=[MinValueValidator(0)],blank=False,null=False)
+    weight = models.DecimalField(
+        _("Poids"),
+        max_digits=5,
+        decimal_places=2,validators=[MinValueValidator(0)],blank=False,null=False,default=0)
     blood_group = models.CharField(
         _("Group sanguin"),
         max_length=4,
