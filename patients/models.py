@@ -142,7 +142,7 @@ class Patient(models.Model):
     first_name = models.CharField(_("Prénom"), max_length=150, blank=False,null=False)
     last_name = models.CharField(_("Nom"), max_length=150, blank=False,null=False)
     date_of_birth = models.DateField(_("Date de naissance"),blank=True,null=True)
-    place_of_birth = models.DateField(_("Lieu de naissance"),blank=False,null=False),
+    place_of_birth = models.CharField(_("Lieu de naissance"), max_length=150, blank=False,null=False,default='')
     gender =  models.CharField(
         _("Sexe"),
         max_length=5,
