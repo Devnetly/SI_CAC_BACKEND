@@ -96,6 +96,7 @@ class Histology(models.Model):
     molecular_profile = models.CharField(_("Profil moléculaire"), max_length=150, blank=False,null=False)
     image = models.ImageField(_("Compte rendu"), upload_to='comptes_rendus', blank=True, null=True)
     immunohistochemistry = models.OneToOneField(Immunohistochemistry, verbose_name='Immunohistochimie', on_delete=models.CASCADE)
+    patient_id = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name='histologies')
 
 
     
@@ -175,7 +176,6 @@ class Patient(models.Model):
     other_exposition = models.CharField(_(""), max_length=150, blank=True,null=True)
     phone_number = models.CharField(_("Numéro de téléphone "), max_length=10, blank=True,null=True,validators=[phone_number_validator],)
     primary_doctor = models.ForeignKey(User, verbose_name="Médecin principal", on_delete=models.CASCADE, related_name="primary_patients", null=True, blank=True)
-    histologies = models.ForeignKey(Histology,verbose_name="Histologies", on_delete=models.CASCADE, blank=True,null= True)
     progress = models.IntegerField(_("Status"), choices=ProgressChoices.choices, default=0)
     archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
@@ -194,8 +194,7 @@ class Prediction(models.Model):
     benign = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     malignant = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     atypical = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
-    #link to the patient
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='predictions')
+    histology = models.ForeignKey(Histology, on_delete=models.CASCADE, related_name='predictions')
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
