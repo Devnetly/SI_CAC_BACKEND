@@ -28,6 +28,15 @@ class PatientViewSet(viewsets.ModelViewSet):
     serializer_class = PatientSerializer
     permission_classes = [IsAuthenticated]
 
+class PatientHistologiesView(generics.ListAPIView):
+    serializer_class = HistologySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        patient_id = self.kwargs.get('patient_id')
+        patient = Patient.objects.get(id=patient_id)
+        return Histology.objects.filter(patient_id=patient)
+
 
 # to return the number of all patients by all time, older than a year ...
 class PatientCountView(APIView):
