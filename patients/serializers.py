@@ -26,7 +26,7 @@ class PatientHistorySerializer(serializers.ModelSerializer):
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        exclude = ['primary_doctor']
+        fields = '__all__'
 
     def create(self, validated_data):
         request = self.context.get('request')
