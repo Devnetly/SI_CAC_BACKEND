@@ -31,10 +31,28 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'profile_picture')
 
 class PatientSerializer(serializers.ModelSerializer):
-    doctor = DoctorProfileSerializer(source='doctor_id', read_only=True)
+    primary_doctor_first_name = serializers.SerializerMethodField()
+    primary_doctor_last_name = serializers.SerializerMethodField()
+    primary_doctor_profile_picture = serializers.SerializerMethodField()
     class Meta:
         model = Patient
-        fields =  fields = ('id', 'first_name','last_name', 'date_of_birth', 'place_of_birth', 'gender', 'place_of_residence', 'height', 'weight', 'blood_group', 'profession', 'exposition', 'phone_number', 'primary_doctor', 'histologies', 'progress', 'doctor', 'created_at', 'updated_at', 'archived')
+        fields = '__all__'
+
+    def get_primary_doctor_first_name(self, obj):
+        if obj.primary_doctor:
+            return obj.primary_doctor.first_name
+        return None
+
+    def get_primary_doctor_last_name(self, obj):
+        if obj.primary_doctor:
+            return obj.primary_doctor.last_name
+        return None
+    
+    def get_primary_doctor_profile_picture(self, obj):
+        if obj.primary_doctor and obj.primary_doctor.profile_picture:
+            request = self.context.get('request')
+            return request.build_absolute_uri(obj.primary_doctor.profile_picture.url)
+        return None
 
     def create(self, validated_data):
         request = self.context.get('request')
