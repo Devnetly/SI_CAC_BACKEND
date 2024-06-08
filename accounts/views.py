@@ -11,6 +11,10 @@ class TokenObtainPairView(TokenObtainPairView):
     serializer_class = TokenObtainPairSerializer
 
 
+class DoctorDetailView(RetrieveAPIView):
+    queryset = User.objects.filter(is_superuser=False)  # Filter out superusers
+    serializer_class = UserProfileSerializer
+    lookup_field = 'id'  # Use the username as the lookup field
 
 
 
