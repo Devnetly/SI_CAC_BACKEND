@@ -34,7 +34,7 @@ class PatientSerializer(serializers.ModelSerializer):
     doctor = DoctorProfileSerializer(source='doctor_id', read_only=True)
     class Meta:
         model = Patient
-        fields =  fields = ('id', 'first_name','last_name', 'date_of_birth', 'place_of_birth', 'gender', 'place_of_residence', 'height', 'weight', 'blood_group', 'profession', 'exposition', 'phone_number', 'primary_doctor', 'histologies', 'progress', 'doctor', 'created_at', 'updated_at', 'status', 'archived')
+        fields =  fields = ('id', 'first_name','last_name', 'date_of_birth', 'place_of_birth', 'gender', 'place_of_residence', 'height', 'weight', 'blood_group', 'profession', 'exposition', 'phone_number', 'primary_doctor', 'histologies', 'progress', 'doctor', 'created_at', 'updated_at', 'archived')
 
     def create(self, validated_data):
         request = self.context.get('request')
