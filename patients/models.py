@@ -197,9 +197,6 @@ class Prediction(models.Model):
     atypical = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     histology = models.ForeignKey(Histology, on_delete=models.CASCADE, related_name='predictions')
     created_at = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return f'Prediction for {self.patient.full_name()} at {self.created_at}'
     
     class Meta:
         verbose_name = "Prediction"

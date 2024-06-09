@@ -283,24 +283,24 @@ class PredictionViewSet(viewsets.ViewSet):
         print("predictions",predictions)
         return Response(serializer.data)
 
-    def create(self, request, patient_id):
-        patient = Patient.objects.get(id=patient_id)
+    def create(self, request, histology_id):
+        histology = Histology.objects.get(id=histology_id)
         serializer = PredictionSerializer(data=request.data)
         if serializer.is_valid():
-            prediction = serializer.save(patient=patient)
+            prediction = serializer.save(histology=histology)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def retrieve(self, request, patient_id):
-        patient = Patient.objects.get(id=patient_id)
-        predictions = patient.predictions.all()
+    def retrieve(self, request, histology_id):
+        hisotology = Histology.objects.get(id=histology_id)
+        predictions = hisotology.predictions.all()
         serializer = PredictionSerializer(predictions, many=True)
         return Response(serializer.data)
 
-    def update(self, request, patient_id, prediction_id):
-        patient = Patient.objects.get(id=patient_id)
+    def update(self, request, histology_id, prediction_id):
+        histology = Histology.objects.get(id=histology_id)
         try:
-            prediction = Prediction.objects.get(id=prediction_id, patient=patient)
+            prediction = Prediction.objects.get(id=prediction_id, histology=histology)
         except Prediction.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = PredictionSerializer(prediction, data=request.data)
@@ -309,9 +309,9 @@ class PredictionViewSet(viewsets.ViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def destroy(self, request, patient_id):
+    def destroy(self, request, histology_id):
         try:
-            prediction = Prediction.objects.get(patient_id=patient_id)
+            prediction = Prediction.objects.get(histology_id=histology_id)
         except Prediction.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         prediction.delete()

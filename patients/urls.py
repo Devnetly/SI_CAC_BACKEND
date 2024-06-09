@@ -20,7 +20,7 @@ urlpatterns = [
         'delete': 'destroy'
     }), name='patient-collaborators'),
     path('predictions/', PredictionViewSet.as_view({'get': 'list_preds'})),
-    path('predictions/<int:patient_id>/', PredictionViewSet.as_view({'post': 'create', 'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
+    path('predictions/<int:histology_id>/', PredictionViewSet.as_view({'post': 'create', 'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
     path('patients-number/', PatientCountView.as_view(), name='patient-count'),
     path('patients-number-by-doctor/', MyPatientCountView.as_view(), name='patient-count-by-doctor'),
     path('doctors-number/', DoctorCountView.as_view(), name='doctor-count'),
