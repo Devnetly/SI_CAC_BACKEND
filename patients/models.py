@@ -50,6 +50,8 @@ class Immunohistochemistry(models.Model):
         max_length=3,
         choices=FISHchoices.choices,
         blank=True,null=True)
+    
+    histology_id = models.OneToOneField('Histology', on_delete=models.CASCADE, related_name='immunohistochemistry')
 
 
 
@@ -95,7 +97,6 @@ class Histology(models.Model):
     cancer_type = models.CharField(_("Nature du cancer"),max_length=62,choices=CancerTypeChoices.choices,blank=False,null=False)
     molecular_profile = models.CharField(_("Profil moléculaire"), max_length=150, blank=False,null=False)
     image = models.ImageField(_("Compte rendu"), upload_to='comptes_rendus', blank=True, null=True)
-    immunohistochemistry = models.OneToOneField(Immunohistochemistry, verbose_name='Immunohistochimie', on_delete=models.CASCADE)
     patient_id = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name='histologies')
 
 
