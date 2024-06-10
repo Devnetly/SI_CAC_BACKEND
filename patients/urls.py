@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .views import ImmunochemistryViewSet, HistologyViewSet, PatientViewSet, PatientsByDoctorView, PatientCollaboratorViewSet, PatientHistoryView, PatientCountView, MyPatientCountView, PredictionViewSet, DoctorCountView,CancerPatientCountView, MonthlyGenderPatientCountView,IncompletePatientsFilesView,ListArchivedPatientsView
-from .views import PatientHistologiesView
+from .views import PatientHistologiesView, MonthlyDiagnosisCountView
 
 
 router = routers.DefaultRouter()
@@ -26,6 +26,7 @@ urlpatterns = [
     path('doctors-number/', DoctorCountView.as_view(), name='doctor-count'),
     path('cancer-patients-number/', CancerPatientCountView.as_view(), name='cancer-patients--count'),
     path('monthly-patient-number-by-gender/', MonthlyGenderPatientCountView.as_view(), name='monthly-gender-patient-count'),
+    path('monthly-patient-number-by-diagnosis/', MonthlyDiagnosisCountView.as_view(), name='monthly-diagnosis-patient-count'),
     path('incomplete-files/',IncompletePatientsFilesView.as_view(), name='incomplete-patients-files'),
     path('archived-patients/',ListArchivedPatientsView.as_view(), name='archived-patients'),
     path('<int:patient_id>/histologies/', PatientHistologiesView.as_view(), name='patient-histologies'),

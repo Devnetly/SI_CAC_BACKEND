@@ -92,6 +92,11 @@ class MonthlyGenderPatientCountSerializer(serializers.Serializer):
     male_count = serializers.IntegerField()
     female_count = serializers.IntegerField()
 
+class MonthlyDiagnosisCountSerializer(serializers.Serializer):
+    month = serializers.CharField()
+    yes_count = serializers.IntegerField()
+    no_count = serializers.IntegerField()
+
 
 class PredictionSerializer(serializers.ModelSerializer):
     class Meta:

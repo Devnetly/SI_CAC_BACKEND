@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-gx==od6-ri=3lx^4_w$ewnz##2ln(9+1m7hlsj^mktlz6v8di6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -185,8 +185,8 @@ EMAIL_PORT = 587
 
 
 
-# ALLOWED_HOSTS = ['*']
-# CORS_ORIGIN_ALLOW_ALL = True
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = (
 #     'http://localhost:3000',
 #     'http://127.0.0.1:3000',

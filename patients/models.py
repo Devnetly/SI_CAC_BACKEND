@@ -91,13 +91,16 @@ class Histology(models.Model):
         NINE = 'Carcinome inflammatoire', _('Carcinome inflammatoire')
         TEN = 'Maladie de Paget du mamelon', _('Maladie de Paget du mamelon')
 
-    zone = models.CharField(_("Zone du tissu"),max_length=100,choices=ZoneChoices.choices,blank=False,null=False,unique=True)
+    zone = models.CharField(_("Zone du tissu"),max_length=100,choices=ZoneChoices.choices,blank=False,null=False)
     yes_no = models.CharField(_("Cancer ou Pas"),max_length=5,choices=CancerYesNoChoices.choices,blank=False,null=False)
     rank = models.CharField(_("Grade"),max_length=5,choices=RankChoices.choices,blank=False,null=False)
     cancer_type = models.CharField(_("Nature du cancer"),max_length=62,choices=CancerTypeChoices.choices,blank=False,null=False)
     molecular_profile = models.CharField(_("Profil moléculaire"), max_length=150, blank=False,null=False)
     image = models.ImageField(_("Compte rendu"), upload_to='comptes_rendus', blank=True, null=True)
     patient_id = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name='histologies')
+    #zone and patient_id are unique together
+    class Meta:
+        unique_together = ('zone', 'patient_id')
 
 
     

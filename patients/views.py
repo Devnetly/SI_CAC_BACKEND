@@ -9,7 +9,8 @@ from datetime import timedelta
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
 from .models import Immunohistochemistry, Histology, Patient, PatientCollaborator, PatientHistory, Prediction
-from .serializers import ImmunochemistrySerializer, HistologySerializer, PatientSerializer, PatientCollaboratorSerializer, PatientHistorySerializer, PredictionSerializer,PatientCountSerializer, DoctorCountSerializer, CancerPatientCountSerializer,MonthlyGenderPatientCountSerializer
+from django.db.models import Case, When, Value, IntegerField, CharField
+from .serializers import ImmunochemistrySerializer, HistologySerializer, PatientSerializer, PatientCollaboratorSerializer, PatientHistorySerializer, PredictionSerializer,PatientCountSerializer, DoctorCountSerializer, CancerPatientCountSerializer,MonthlyGenderPatientCountSerializer, MonthlyDiagnosisCountSerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -188,6 +189,39 @@ class MonthlyGenderPatientCountView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
+class MonthlyDiagnosisCountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        diagnosis_counts = Histology.objects.annotate(
+            month=TruncMonth('patient_id__created_at'),
+            yes_no_display=Case(
+                When(yes_no=Histology.CancerYesNoChoices.YES, then=Value('Yes')),
+                When(yes_no=Histology.CancerYesNoChoices.NO, then=Value('No')),
+                output_field=CharField(),
+            ),
+        ).values('month', 'yes_no_display').annotate(count=Count('id')).order_by('month')
+
+        results = []
+        for count in diagnosis_counts:
+            month_str = count['month'].strftime('%Y-%m')
+            yes_count = 0
+            no_count = 0
+            if count['yes_no_display'] == 'Yes':
+                yes_count = count['count']
+            else:
+                no_count = count['count']
+            results.append({
+                'month': month_str,
+                'yes_count': yes_count,
+                'no_count': no_count,
+            })
+
+        data = results
+        serializer = MonthlyDiagnosisCountSerializer(data=data, many=True)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class IncompletePatientsFilesView(generics.ListAPIView):
