@@ -24,10 +24,36 @@ class HistologyViewSet(viewsets.ModelViewSet):
     serializer_class = HistologySerializer
     permission_classes = [IsAuthenticated]
 
+
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.filter(archived=False)
     serializer_class = PatientSerializer
     permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['patch'])
+    def patch(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @action(detail=False, methods=['put'])
+    def put(self, request):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class PatchPatientView(generics.UpdateAPIView):
+    queryset = Patient.objects.all()
+    serializer_class = PatientSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return super().get_queryset()
+    
+class PutPatientView(generics.UpdateAPIView):
+    queryset = Patient.objects.all()
+    serializer_class = PatientSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return super().get_queryset()
 
 class PatientHistologiesView(generics.ListAPIView):
     serializer_class = HistologySerializer
